@@ -17,6 +17,23 @@ object Day2 {
     input
   }
 
+  def task2(input: Array[Int], requiredOutput: Int): Int = {
+    val output = List((0 to 99):_*).flatMap(x => List((0 to 99):_*).map(y => (x, y)))
+
+    val result = output
+        .map{
+          case (noun, verb) =>
+                val clonedInput = input.clone()
+                clonedInput(1) = noun
+                clonedInput(2) = verb
+                (noun, verb, task1(clonedInput)(0))
+        }
+        .filter(x => x._3 == requiredOutput)
+        .head
+
+    100 * result._1 + result._2
+  }
+
   private def getInput: Array[Int] = {
     Source.fromResource("day2.txt")
         .getLines()
@@ -25,11 +42,13 @@ object Day2 {
         .map(_.toInt)
   }
 
+
   def main(args: Array[String]): Unit = {
     val input = getInput
     input(1) = 12
     input(2) = 2
-
     println(task1(input).mkString(","))
+
+    println(task2(getInput, 19690720))
   }
 }
